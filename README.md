@@ -1,68 +1,33 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Testing React context API
 
-## Available Scripts
+The goal of this repo is to test the usage of React context API, see what is possible to achieve and what are the differencies and similarities with Redux.
 
-In the project directory, you can run:
+## Get started 
 
-### `npm start`
+This repo has been made with React create app see the documentation to getting started : 
+https://github.com/facebook/create-react-app#create-react-app--
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# The Context System
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Props system and Context System
 
-### `npm test`
+With Props we get date _from_ a parent component to a *direct* child
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+With the Context API we get data from a parent component to *any* nested child component
 
-### `npm run build`
+### App with context
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+As an example of the context API usage this repo will be about a small app handling different language.
+The user should be able to select a language and the state of the app will be modified based on the user choice.
+The context API will be use to store the language choice and set the component to use the language choosen.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### Architecture
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+ - A global *App* component with a language selector
+ - A *UserCreate* component containing a containing the next two components
+ - A *Filed* component with an input and a label
+ - A *Button* component containing a submit button
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+With a Props system we will be using a descending architecture with direct relation between component where the selected langage is passed by props to other component.
+In a more complex application we could think that passing the language choosen from the top to deep nested component using the props system is not a good solution, so in this project example :
+ - The *App* component will communicate the choosen language to the *Field* which is nested into the *UserCreate* component (no direct relation between *App* and *Field*) 
