@@ -1,6 +1,10 @@
 # Testing React context API
 
 The goal of this repo is to test the usage of React context API, see what is possible to achieve and what are the differencies and similarities with Redux.
+For that we could set two objectives :
+
+ - share data between component with no direct relation
+ - based on that highlight the pros cons and differences with Redux 
 
 ## Get started 
 
@@ -19,65 +23,69 @@ With the Context API we get data from a parent component to *any* nested child c
 
 As an example of the context API usage this repo will be about a small app handling different language.
 The user should be able to select a language and the state of the app will be modified based on the user choice.
-The context API will be use to store the language choice and set the component to use the language choosen.
+The context API will be use to store the language choice and set the component to use the choosen language.
+
+In addition, to show how to handle a component pulling data from multiple contexts we will add a theme selector to change the color of the button.
 
 # Architecture
 
 ### Components of the app
 
- - A global *App* component with a language selector
- - A *UserCreate* component containing a containing the next two components
- - A *Filed* component with an input and a label
+ - A global *App* component with a language and a theme selector
+ - A *UserCreate* component rendering the next two components (*Field* and *Button*)
+ - A *Field* component with an input and a label
  - A *Button* component containing a submit button
 
 With a Props system we will be using a descending architecture with direct relation between component where the selected langage is passed by props to other component.
-In a more complex application we could think that passing the language choosen from the top to deep nested component using the props system is not a good solution, so in this project example :
- - The *App* component will communicate the choosen language to the *Field* which is nested into the *UserCreate* component (no direct relation between *App* and *Field*) 
+In a more complex application we could think that passing the language choosen from the top to a deep nested component using the props system is not a good solution, so in this project example :
+ - The *App* component will communicate the choosen language to the *Button* component which is nested into the *UserCreate* component (no direct relation between *App* and *Button*)
 
 # Getting Data Out of Context
 
 ### Context Object
 
-To pass data between the *App* component and the *Button/Field* components we will use a **Context Object**
+To pass data between the *App* component and the *Button* component we will use a **Context Object**.
 The **Context Object** will be like a *pipe* to pass data between our non direct-relationed component
 
-This way the *Button/Field* component will **consume** data from the *App* component
+This way the *Button* component will **consume** data from the *App* component
 
 ### How we get data into the Context Object and how consume them ?
 
 The first thing to ask is, how we pass data to the Context Object ? And how our component could consume them ?
 
-There is two way to get information **in**, the **source of data** could be :
+There is two way to produce and consume the data from a **Context Object** :
+
+two ways to produce the data :
 
  - A default value (when context is created)
- - Inside a parent component create a **provider**, the provider will push data into the **context object**
+ - Using a **Provider Object** component, the provider will push data into the **Context Object**
 
 And two ways to **use** that data :
 
  - Using the syntax **this.context** to get default value from the **Context Object**
- - Using a consumer component
+ - Using a consumer component to get the value passed by a **Provider Object**
 
  ### Creating the Context Object
 
  - Create a new "contexts" folder
  - Inside this folder create a _.js_ file, example: _LanguageContext.js_
  
-In our case we want to use a **Context Object** to connect our **App** component to our **Button** and **Field** Component in a way that those two component access to the Language Context
+In our case we want to use a **Context Object** to connect our **App** component to our **Button** Component in a way that those two component access to the Language Context
 
 So inside our _LanguageContext.js_ we simply import React and use the ```React.createContext();``` method
 We can set our **Context Object** with a default value like this : ```React.createContext('english');```
 
 ### Connect the Context Object
 
-First we will use the **this.context** method to get the default value of the **Context Object** into our Button component.
-
-In order to achieve this, we have to import the context like this : ```import LanguageContext from '../contexts/LanguageContext'```
+To connect the **Connect Object** we have to import the context like this : ```import LanguageContext from '../contexts/LanguageContext'```
 
 # Accessing the data inside the Context Object
 
 ## Using the Context Type
 
 ### Context Type
+
+First we will use the **this.context** method to get the default value of the **Context Object** into our Button component.
 
 The **Context Type** essentially link a component to a **Context Object** and allow us to use the syntax ```this.context``` like this : ```static contextType = LanguageContext```
 Be sure to use this exact syntax ```static contextType =``` or it will not be working.
@@ -86,7 +94,7 @@ Be sure to use this exact syntax ```static contextType =``` or it will not be wo
 
 If your **Context Type** is defined, you can access to the **Context Object** by using ```this.context```
 
-If you declare a default value into your **Context Object** like this ```React.createContext('english');``` console.log ```this.context``` will return this default value ```english```
+If you declare a default value into your **Context Object** like this ```React.createContext('english')``` console.log ```this.context``` will return this default value ```english```
 
 The value could be any type (Object, Array, etc)
 
