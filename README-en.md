@@ -1,87 +1,85 @@
-# Test de l'API Context de React
+# Testing React context API
 
-Le but de ce repo est de tester l'utilisation de l'API context de React de l'utiliser au travers d'un exemple simple, nous pouvons partir sur 2 objectifs :
+The goal of this repo is to test the usage of React context API, see what is possible to achieve and what are the differencies and similarities with Redux.
+For that we could set two objectives :
 
- - partager des données entre des composants sans relation direct (donc pas de props)
- - à partir de cet exemple, dégager les défauts et avantages de Context API
+ - share data between component with no direct relation
+ - based on that highlight the pros cons and differences with Redux 
 
- Puis dans un second temps essayer de dégager des scénarios d'usages et de voir les différences/similitudes avec Redux 
+## Get started 
 
-## Getting started 
-
-Ce repo utilise Create React App dont voici la documentation : 
+This repo has been made with React create app see the documentation to getting started : 
 https://github.com/facebook/create-react-app#create-react-app--
 
-# Le système de Context
+# The Context System
 
-### Props system vs Context System
+### Props system and Context System
 
-Avec le système de props il est possible de passer des données d'un composant parent a un composant enfant direct
+With Props we get date _from_ a parent component to a *direct* child
 
 With the Context API we get data from a parent component to *any* nested child component
-Avec l'API context il est possible de partager des données entre un composant parent et _nested component_ peu importe le nombre de composants entre eux.
 
 ### App with context
 
-Pour cet exemple d'utilisation de l'API context le code de ce repo est une toute petite application qui permet à un utilisateur de choisir un langage et un thème pour les boutons.
+As an example of the context API usage this repo will be about a small app handling different language.
+The user should be able to select a language and the state of the app will be modified based on the user choice.
+The context API will be use to store the language choice and set the component to use the choosen language.
 
-L'API context est utilisé pour partager le choix de langue et de thème de l'utilisateur et les partager entre composants.
-
-Le but est également de montrer comment un composant peut consommer des données de plusieurs _contexts_
+In addition, to show how to handle a component pulling data from multiple contexts we will add a theme selector to change the color of the button.
 
 # Architecture
 
-### Composants de l'applicationxs
+### Components of the app
 
- - Un composant global *App* qui permet de sélectionner une langue et un thème
- - Un composant *UserCreate* qui rend les deux composants suivant (et fait que ceux-ci ne sont pas enfant direct de App)
- - Un composant *Field* avec un input et un label
- - Un composant *Button* qui consommera les données (texte fonction de la langue et couleur du bouton fonction du theme)
+ - A global *App* component with a language and a theme selector
+ - A *UserCreate* component rendering the next two components (*Field* and *Button*)
+ - A *Field* component with an input and a label
+ - A *Button* component containing a submit button
 
-Avec un système de props nous utiliserions des relation direct entre les composants, ou le choix de langage et de thème serait passer en props depuis le composant parent au composant enfant direct.
+With a Props system we will be using a descending architecture with direct relation between component where the selected langage is passed by props to other component.
+In a more complex application we could think that passing the language choosen from the top to a deep nested component using the props system is not a good solution, so in this project example :
+ - The *App* component will communicate the choosen language to the *Button* component which is nested into the *UserCreate* component (no direct relation between *App* and *Button*)
 
-Dans le cas d'une application plus complexe nous pouvons penser que créer une chaîne où l'info redescend de parent vers enfant sur plusieurs niveau est une mauvaise idée.
-
-Nous allons donc utiliser Context API pour partager des infos entre le composant *App* et le composant *Button* séparé l'un de l'autre par le composant *UserCreate*
-
-# Consommer les Data depuis un Context
+# Getting Data Out of Context
 
 ### Context Object
 
-Pour passer les data depuis le composant *App* vers le composant *Button* nous allons créer un **Context Object**
-Le **Context Object** sera comme un "tuyau" par lequel vont transiter nos données entre deux composant n'ayant pas de relation directe
+To pass data between the *App* component and the *Button* component we will use a **Context Object**.
+The **Context Object** will be like a *pipe* to pass data between our non direct-relationed component
 
-### Créer le Context Object
+This way the *Button* component will **consume** data from the *App* component
 
- - Créer un nouveau répertoire, dans notre example le répertoire "contexts"
- - Dans ce répertoire créez un fichier _.js_ dans notre example : _LanguageContext.js_
+### How we get data into the Context Object and how consume them ?
 
-Á l'intérieur de _LanguageContext.js_ nous importons tout simplement React et la méthode ```React.createContext();```
+The first thing to ask is, how we pass data to the Context Object ? And how our component could consume them ?
 
-### Connecter le Context Object
+There is two way to produce and consume the data from a **Context Object** :
 
-Pour connecter le **Connect Object** nous devons dans notre composant Button où nous souhaitons consommer les données, nous devons importer le *context* de la manière suivante : ```import LanguageContext from '../contexts/LanguageContext'```.
+two ways to produce the data :
 
-### Comment produire des données dans le Context Object et comment consommer celles-ci ?
+ - A default value (when context is created)
+ - Using a **Provider Object** component, the provider will push data into the **Context Object**
 
-Il y deux manière de produire des données dans un **Context Object** et également deux manière de les consommer :
+And two ways to **use** that data :
 
-Produire les données :
+ - Using the syntax **this.context** to get value from the **Context Object**
+ - Using a **consumer** component to get the value passed by a **Provider Object**
 
- - Insérer une/des valeurs par défaut à la création du **Context Object**
- - Utiliser un composant **Provider Object**, le provider se charge d'insérer les données dans le **Context Object**
+ ### Creating the Context Object
 
-Et deux manières de consommer les données :
+ - Create a new "contexts" folder
+ - Inside this folder create a _.js_ file, example: _LanguageContext.js_
 
- - En utillisant la syntaxe **this.context**
- - En utilisant un composant **consumer**
+So inside our _LanguageContext.js_ we simply import React and use the ```React.createContext();``` method
+We can set our **Context Object** with a default value like this : ```React.createContext('english');```
 
-## Produire des données dans le Context Object
+### Connect the Context Object
 
-### déclarer une valeur par défaut
+To connect the **Connect Object** we have to import the context like this : ```import LanguageContext from '../contexts/LanguageContext'``` in the component where we want to consume the data.
 
-La première méthode (pas forcément utile) est de déclarer une valeur par défaut, 
-Il est possible d'assigner une valeur par défaut à la main à la création de votre Context, de la manière suivante : ```React.createContext('english');```
+# Accessing the data inside the Context Object
+
+## Using the Context Type
 
 ### Context Type declaration
 
