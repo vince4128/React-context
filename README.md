@@ -18,12 +18,11 @@ https://github.com/facebook/create-react-app#create-react-app--
 
 Avec le système de props il est possible de passer des données d'un composant parent a un composant enfant direct
 
-With the Context API we get data from a parent component to *any* nested child component
 Avec l'API context il est possible de partager des données entre un composant parent et _nested component_ peu importe le nombre de composants entre eux.
 
-### App with context
+### App avec Context
 
-Pour cet exemple d'utilisation de l'API context le code de ce repo est une toute petite application qui permet à un utilisateur de choisir un langage et un thème pour les boutons.
+Pour cet exemple d'utilisation de l'API context le code de ce repo est une toute petite application qui permet à un utilisateur de choisir un langage et un thème pour les boutons (inspiré d'une formation de Stepehn Grider).
 
 L'API context est utilisé pour partager le choix de langue et de thème de l'utilisateur et les partager entre composants.
 
@@ -38,7 +37,7 @@ Le but est également de montrer comment un composant peut consommer des donnée
  - Un composant *Field* avec un input et un label
  - Un composant *Button* qui consommera les données (texte fonction de la langue et couleur du bouton fonction du theme)
 
-Avec un système de props nous utiliserions des relation direct entre les composants, ou le choix de langage et de thème serait passer en props depuis le composant parent au composant enfant direct.
+Avec un système de props nous utiliserions des relation direct entre les composants, où le choix de langage et de thème serait passé en props depuis le composant parent au composant enfant direct.
 
 Dans le cas d'une application plus complexe nous pouvons penser que créer une chaîne où l'info redescend de parent vers enfant sur plusieurs niveau est une mauvaise idée.
 
@@ -60,7 +59,7 @@ Le **Context Object** sera comme un "tuyau" par lequel vont transiter nos donné
 
 ### Connecter le Context Object
 
-Pour connecter le **Connect Object** nous devons dans notre composant Button où nous souhaitons consommer les données, nous devons importer le *context* de la manière suivante : ```import LanguageContext from '../contexts/LanguageContext'```.
+Pour connecter le **Connect Object**, dans notre composant Button où nous souhaitons consommer les données nous devons importer le *context*, et ce de la manière suivante : ```import LanguageContext from '../contexts/LanguageContext'```.
 
 ### Comment produire des données dans le Context Object et comment consommer celles-ci ?
 
@@ -83,74 +82,70 @@ Et deux manières de consommer les données :
 La première méthode (pas forcément utile) est de déclarer une valeur par défaut, 
 Il est possible d'assigner une valeur par défaut à la main à la création de votre Context, de la manière suivante : ```React.createContext('english');```
 
-### Context Type declaration
+### declaration Context Type
 
-First we will use the **this.context** method to get the default value of the **Context Object** into our Button component.
+L'une des options est d'utiliser la méthode **this.context** pour récupérer la valeure déclarée par défaut dans **Context Object** dans notre composant _Button_
 
-The **Context Type** essentially link a component to a **Context Object** and allow us to use the syntax ```this.context``` like this : ```static contextType = LanguageContext```
-Be sure to use this exact syntax ```static contextType =``` or it will not be working.
+Le **Context Type** crée un lien entre un composant et un **Context Object** et nous permet d'utiliser la syntaxe ```this.context``` de la manière suivante : ```static contextType = LanguageContext``` il faut s'assurrer de bien utiliser la syntaxe suivante ```static contextType =``` où cela ne fonctionnera pas.
 
-### Consuming the Context Value with **Context Type**
-
-If your **Context Type** is defined, you can access to the **Context Object** by using ```this.context```
-
-If you declare a default value into your **Context Object** like this ```React.createContext('english')``` console.log ```this.context``` will return this default value ```english```
-
-The value could be any type (Object, Array, etc)
+Ainsi si nous déclarons une valeur par défaut dans notre **Context Object** de la manière suivante ```React.createContext('english')``` un console.log de ```this.context``` retournera ```english``` (la valeur peut être de tout type)
 
 ## Using a Provider
 
 ### The context Provider
 
-With the previous step, we can now access the data inside our **Context Object**, but how can we set the value of this data ?
+L'étape vue précédemment nous permet d'accéder aux données dans notre **Context Object**, mais comment _setter_ celles-ci ?
 
-The default value manually set into the **Context Object** is immutable and we can just access it.
-To be able to set the value of the data into the **Context Object** we have to create a **Context Provider** which will act as a source of truth for the values of the data
+La valeur par défaut que nous avons définie manuellement dans le **Context Object** est immutable et nous pouvons juste accéder à celle-ci.
+Pour pouvoir _setter_ celle-ci dans le **Context Object** il faut créer un **Context Provider** qui va agir comme source de vérité pour les valeurs des données
 
-In our example we want to share data between the *App* and the *Button* component and being able to update the value of the **Context Object**, in order to achieve this we will create a **Context Provider** 
+Dans notre exemple nous souhaitons échanger des données entre les composants *App* et *Button*, et être capable de mettre à jour les valeurs dans le **Context Object**.
 
-To achieve this in order you have to :
+Pour cela nous devons créer un **Context Provider**
 
- - import the **Context Object** in the 'top' component in our case the *App* component with the import statement ```import LanguageContext from '../contexts/LanguageContext'```
- - Wrap the child component *UserCreate* containing the *Field* and *Button* component like this : ```<LanguageContext.Provider><UserCreate/></LanguageContext.Provider>```
+Dans l'ordre, nous devons :
 
-There is an another step !
+ - Importer le **Context Object** dans le composant le plus 'haut' dans notre cas *App* avec l'import suivant ```import LanguageContext from '../contexts/LanguageContext'```
+ - Décorer le composant enfant *UserCreate* contenant le composant *Button* comme cela : ```<LanguageContext.Provider><UserCreate/></LanguageContext.Provider>```
 
- - add to the provider a value propertie, this value propertie is the data you want to share with other component, in our case it's a property of the *state* object of the *App* Component
- we do this like that : ```<LanguageContext.Provider value={this.state.language}>```
+Il reste une étape :
 
-Using a value from the state of a component give us a way to set this value.
+ - ajouter au provider une propriété 'value', cette propriété est la donnée que vous souhaitez partager avec d'autres comoosants, dans notre cas c'est une propriété de notre objet *state* de notre composant *App*, de la manière suivante : ```<LanguageContext.Provider value={this.state.language}>```
 
-Still it could be a good practice to set a default value in the context
+Utiliser une valeur du state object nous permet de mettre à jour cette valeur.
 
-## Using a consumer
+Cela n'empêche pas de déclarer manuellement une valeure par défaut dans le **Context Object** c'est même une bonne pratique.
 
-### Accessing Data with consumers
+## Utiliser un consumer
 
-In the same way we've created a **Context Provider** component to access the data into the **Context Object** there is a component to read the data : the **Consumer**
-It allow us to not use the Context Type decorator.
+### Accéder aux données avec un consumer
 
-The syntax to use a **Context Consumer** is : ```<LanguageContext.Consumer>{(value) => {}}</LanguageContext.Consumer>```
-Inside the consumer we always have to use a function, and only inside this function we will use the value coming from the **Context Provider**
+De la même manière que nous avons crée un composant **Context Provider** pour accéder aux données à l'intérieur du **Context Object** il existe un composant pour lire les données : le **Consumer**, cela nous permet de ne pas utiliser la syntaxe **Context Type** vue prédédemment.
 
-Of course for the clarity of the code this function could be deported to a render helper method
+La syntaxe à utiliser pour utiliser le **Context Consumer** est la suivante : ```<LanguageContext.Consumer>{(value) => {}}</LanguageContext.Consumer>```
 
-### Why using a consumer and note the Context Type approch ?
+à l'intérieur du consumer il faut toujours utiliser une fonction, et c'est seulement dans cette fonction que nous pourrons utiliser les données venant du **Context Provider**
 
-To answer this question we have to imagine the case where we are **Pulling from multiple contexts**
-using the syntax ```this.context```is fine when we work with one context, but couldn't handle the case where we have to use multiple contexts
+Bien sûr pour maintenir un minimum de lisibilité au niveau du code il est conseillé d'utiliser des methods helper
 
-To demonstrate this we had a Color Context to the project allowing us to define a theme for the buttons.
+### Pourquoi utliser un consumer et ne pas utiliser la syntaxe **Consumer Type**
 
-To achieve this we create a second context and access it inside the *Button* component where we already access the Language context
+Pour répondre à cette question nous allons ajouter une notion de thème à notre exemple, le user pourra désormais sélectionner une langue mais également un thème (qui modifiera la couleur du bouton youhou! via un nouveau **context**)
 
-# Warning
+Cela va nous obliger a récupérer des données *depuis plusieurs* **contexts**
+Utiliser la syntaxe ```this.context``` est ok lorsque l'on ne travail qu'avec un context, mais ne permet pas de gérer les cas où l'on utilise plusieurs contexts
 
-The documentation is not really explicit on one point :
+# Attention
 
-**Each separate use of LanguageContext.Provider creates a new separate 'pipe' of information every single time we use it !**
+La documentation de React Context n'est pas explicite sur un point !
 
-So if in the same file we have : ```<LanguageContext.Provider value={this.state.language}><UserCreate/></LanguageContext.Provider>```
-and after a second Provider with a hard coded value : ```<LanguageContext.Provider value='english'><UserCreate/></LanguageContext.Provider>``` 
+**Chaque utilisation d'un context via un provider (par exemple chaque utilisation de LangugageContext.Provider) crée un nouveau 'pipe' d'information**
 
-The second *UserCreate* component will always have the 'english' value, both Provider aren't connected in any way
+Dis très très maladroitement : ce n'est pas un singleton...
+
+Donc si dans un fichier on a : ```<LanguageContext.Provider value={this.state.language}><UserCreate/></LanguageContext.Provider>```
+et dans un second temps on utilise un Provider avec une valuer manuellement définie : ```<LanguageContext.Provider value='english'><UserCreate/></LanguageContext.Provider>``` 
+
+La second composant *UserCreate* aura toujours la valeure 'english' car :
+
+**Les deux providers ne sont en aucun cas connectés !!!**
