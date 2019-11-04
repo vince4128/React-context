@@ -43,7 +43,7 @@ Dans le cas d'une application plus complexe nous pouvons penser que créer une c
 
 Nous allons donc utiliser Context API pour partager des infos entre le composant *App* et le composant *Button* séparé l'un de l'autre par le composant *UserCreate*
 
-# Consommer les Data depuis un Context
+# Consommer et produire des données
 
 ### Context Object
 
